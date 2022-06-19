@@ -6,6 +6,9 @@ from socket import *
 from threading import *
 import time
 import json
+import cv2 as cv
+import sys, os
+import time
 
 
 ############ STATIC SETTINGS ################
@@ -16,18 +19,46 @@ PORT = 5000
 BUFFERSIZE = 1024
 TIMEOUT = 10
 
+DICT_PATH = "/Users/sebastiankaeser/Desktop/Coding/Python/Homeserver/"
+
 cDict = {}
+currentDict= {}
 
 ############## HELPER FUNCTIONS ##############
 
-def save():
-    with open('cDict.json','w') as outfile:
+def disablePrint():
+    sys.stdout = open(os.devnull,'w')
+def enablePrint():
+    sys.stdout = sys.__stdout__
+
+def saveCDict():
+    with open(DICT_PATH + "cDict.json" ,'w') as outfile:
+        global cDict
         json.dump(cDict,outfile)
 
-def load():
-    with open('cDict.json') as file:
+def loadCDict():
+    with open(DICT_PATH+"cDict.json") as file:
         global cDict
         cDict = json.load(file)
+
+def saveCurrentDict():
+    with open(DICT_PATH + "currentDict.json", "w") as outfile:
+        global currentDict
+        json.dump(currentDict,outfile)
+
+def loadCurrentDict():
+    with open(DICT_PATH + "currentDict.json") as file:
+        global currentDict
+        currentDict = json.load(file)
+def help():
+    print("listen or l\t\t listen for new UDP events")
+    print("quit or q\t\tfor quitting clear with the server")
+    print("timeout or t\t\t changes timeout value")
+    print("passiv\t\t runs silent in background for updating")
+    print("send or s\t\t for sending an UDP text message")
+    print("new or n\t\t for register a new connection")
+
+
 
 
 def inDict(addr):
@@ -51,15 +82,31 @@ def handleData():
             message = bytePair[0].decode()
             addr = bytePair[1]
             trans = inDict(addr)
-            print("-------")
-            print(f"Message: {message}");
+            extractMessage(trans,message)
+            print("----------")
             if trans == None:
-                print(f"IP: {addr[0]}, Port: {addr[1]}")
+                print(f"Message: {message} von IP=({addr[0]}) & Port=({addr[1]}")
             else:
-                print(f"Name: {trans}")
+                print(f"Message: {message} von {trans}")
     except KeyboardInterrupt:
         print()
         return
+
+
+def extractMessage(trans,msg):
+    s = msg.split(",")
+    n = len(s)
+    pairs = []
+    for i in range(n):
+        pairs.append(s[i].split("="))
+
+    for e in pairs:
+        name = e[0]
+        num = float(e[1])
+        currentDict[f"{trans}:{name}"] = num
+    saveCurrentDict()
+
+    #temp=32.40,hum=99.90
 
 
 
@@ -91,12 +138,27 @@ def handleNewEntry():
         cDict[ip] = (port,name)
         save()
 
+def passiveMode():
+    c = 0
+    try:
+        disablePrint()
+        while 1:
+            c += 1
+            handleData()
+            time.sleep(1)
+    except KeyboardInterrupt:
+        print("End of passiv mode..")
+        enablePrint()
+    enablePrint()
+
+
 
 
 ################## SETUP ##############################
 
 
-load()
+loadCDict()
+loadCurrentDict()
 s = socket(AF_INET, SOCK_DGRAM) 
 s.bind((IP,PORT))
 s.settimeout(TIMEOUT)
@@ -108,7 +170,7 @@ print(f"timeout={TIMEOUT}")
 
 while 1:
     try:
-        op = input("##########\nWas möchtest du tun?\n>>\t")
+        op = input("\n++++++++++++++++++++++\nWas möchtest du tun?\n>>\t")
 
         if op == "listen" or op == "l":
             handleData()
@@ -120,9 +182,13 @@ while 1:
             handleSend()
         elif op == "new" or op == "n":
             handleNewEntry()
+        elif op == "passiv":
+            passiveMode()
+        elif op == "help" or op == "h":
+            help()
         else:
             print(f"Keine option mit der Bezeichung {op}")
-            print("Bitte nochmal probieren oder mit q beenden\n")
+            help()
     except EOFError:
         continue
     except KeyboardInterrupt:
