@@ -9,22 +9,20 @@ import json
 import cv2 as cv
 import sys, os
 import time
+from privates import *
 
 
 ############ STATIC SETTINGS ################
 
 
-IP = "192.168.0.209"
-PORT = 5000
 BUFFERSIZE = 1024
 TIMEOUT = 10
-
-DICT_PATH = "/Users/sebastiankaeser/Desktop/Coding/Python/Homeserver/"
 
 cDict = {}
 currentDict= {}
 
 ############## HELPER FUNCTIONS ##############
+
 
 def disablePrint():
     sys.stdout = open(os.devnull,'w')
@@ -52,9 +50,9 @@ def loadCurrentDict():
         currentDict = json.load(file)
 def help():
     print("listen or l\t\t listen for new UDP events")
-    print("quit or q\t\tfor quitting clear with the server")
+    print("quit or q\t\t for quitting clear with the server")
     print("timeout or t\t\t changes timeout value")
-    print("passiv\t\t runs silent in background for updating")
+    print("passiv\t\t\t runs silent in background for updating")
     print("send or s\t\t for sending an UDP text message")
     print("new or n\t\t for register a new connection")
 
@@ -111,24 +109,31 @@ def extractMessage(trans,msg):
 
 
 def handleTimeoutChange():
+    try:
         t = int(input("Wie lange soll der Timeout gehen?\n>>\t"))
         TIMEOUT = t
         s.settimeout(t)
         print("timeout=" + str(TIMEOUT))
+    except KeyboardInterrupt:
+        return
 
 
 
 
 def handleSend():
+    try:
         ip = input("Bitte gib die Target-IP an\n>>\t")
         port = int(input("Bitte gib den Target-Port an\n>>\t"))
         msg = input("Bitte gib die Nachricht an\n>>\t").encode()
         s.sendto(msg,(ip,port))
         print("Nachricht erfolgreich gesendet")
+    except KeyboardInterrupt:
+        return
 
 
 
 def handleNewEntry():
+    try:
         addr = input("Bitte gib IP und Port an (space als seperator)\n>>\t").split(" ")
         name = input("Bitte gib den zugehörigen Namen an\n>>\t")
         if len(addr) != 2:
@@ -137,6 +142,8 @@ def handleNewEntry():
         port = int(addr[1])
         cDict[ip] = (port,name)
         save()
+    except KeyboardInterrupt:
+        return
 
 def passiveMode():
     c = 0
@@ -160,7 +167,12 @@ def passiveMode():
 loadCDict()
 loadCurrentDict()
 s = socket(AF_INET, SOCK_DGRAM) 
-s.bind((IP,PORT))
+try:
+    s.bind((IP,PORT))
+except OSError as e:
+    print("OS Error Occured")
+    print(e)
+    exit(1)
 s.settimeout(TIMEOUT)
 print(f"Server is listening on {IP}: {str(PORT)}..")
 print(f"timeout={TIMEOUT}")
