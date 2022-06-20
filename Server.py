@@ -35,10 +35,12 @@ def enablePrint():
 
 def saveCamDict():
     with open(DICT_PATH + "camDict,json", "w") as outfile:
-        global camDict
         json.dump(camDict,outfile)
+
+
 def loadCamDict():
     with open(DICT_PATH + "camDict.json") as file:
+        global camDict
         camDict = json.load(file) 
 
 def saveCDict():
@@ -79,6 +81,16 @@ def inDict(addr):
             if cDict[key][0] == port:
                 return cDict[key][1]
     return None
+
+def killOld():
+    pid = os.getpid()
+    res = str(os.system("ps aux | awk '/Server.py/{print $2}'"))
+    for r in res.split("\n"):
+        r = r.strip()
+        if r == pid:
+            continue
+        os.kill(int(r),9)
+
 
 ############## MAIN FUNCTIONS ###################
 
@@ -193,17 +205,16 @@ def showCam(name,url):
                 continue
         if cv.waitKey(1) == ord("q"):
             cv.destroyAllWindows()
-            print(name + " stopos streaming")
+            print(name + " stops streaming")
             break
 
 def chooseCam():
-    loadCamDict()
-    opt = input("choose cam with name or type new for new cam")
+    print(camDict)
+    opt = input("choose cam with name or type new for new cam\n>>\t")
     if opt == "new":
-        n = input('What is the name for the new cam?')
-        u = input("What is the url for the cam?")
+        n = input('Cam Name?\n>>\t')
+        u = input("Url?^n>>\t")
         camDict[n] = u
-        saveCamDict()
         return
     url = camDict[opt] 
     if url == None:
@@ -224,14 +235,13 @@ def setup():
     global s
     loadCDict()
     loadCurrentDict()
-    while 1:
-        try:
-            s.bind((IP,PORT))
-            break
-        except OSError as e:
-            print(e)
-            print((IP,PORT))
-            exit(1)
+    loadCamDict()
+    try:
+        s.bind((IP,PORT))
+    except OSError as e:
+        print(e)
+        print((IP,PORT))
+        exit(1)
     s.settimeout(TIMEOUT)
     print(f"Server is listening on {IP}: {str(PORT)}..")
     print(f"timeout={TIMEOUT}")
@@ -243,6 +253,7 @@ def mainloop():
     while 1:
         try:
             op = input("\n++++++++++++++++++++++\nWas möchtest du tun?\n>>\t")
+            saveCamDict()
 
             if op == "listen" or op == "l":
                 handleData()
@@ -274,16 +285,21 @@ def mainloop():
 
 ################## MAIN SECTION ##############
     
-setup()
 if len(sys.argv) == 2:
     op = sys.argv[1]
     if op == "normal" or op == "" or op == None:
+        setup()
         mainloop()
     elif op == "passiv":
+        setup()
         passiveMode()
+    elif op == "killold":
+        killOld()
+        print("old proc killed")
     else:
         print("no such option!")
         exit(1)
 else:
+    setup()
     mainloop()
 
