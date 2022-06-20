@@ -4,12 +4,16 @@
 
 from socket import *
 from threading import *
+import requests
 import time
 import json
 import cv2 as cv
 import sys, os
 import time
+import numpy as np
+from io import BytesIO
 from privates import *
+
 
 
 ############ STATIC SETTINGS ################
@@ -20,14 +24,22 @@ TIMEOUT = 10
 
 cDict = {}
 currentDict= {}
+camDict = {}
 
 ############## HELPER FUNCTIONS ##############
-
 
 def disablePrint():
     sys.stdout = open(os.devnull,'w')
 def enablePrint():
     sys.stdout = sys.__stdout__
+
+def saveCamDict():
+    with open(DICT_PATH + "camDict,json", "w") as outfile:
+        global camDict
+        json.dump(camDict,outfile)
+def loadCamDict():
+    with open(DICT_PATH + "camDict.json") as file:
+        camDict = json.load(file) 
 
 def saveCDict():
     with open(DICT_PATH + "cDict.json" ,'w') as outfile:
@@ -148,15 +160,58 @@ def handleNewEntry():
 def passiveMode():
     c = 0
     try:
+        print("Passiv Mode -stdout is inactive")
         disablePrint()
         while 1:
             c += 1
             handleData()
             time.sleep(1)
     except KeyboardInterrupt:
-        print("End of passiv mode..")
-        enablePrint()
+        pass
     enablePrint()
+    print("End of passiv mode..")
+
+def backgroundMode():
+    os.system('./Server.py &')
+    print("server runs in background")
+    print("if you want to kill please check the pid")
+
+
+def showCam(name,url):
+    res = requests.get(url,stream=True)
+
+    print(name + " starts streaming")
+    for chunk in res.iter_content(chunk_size=120000):
+        if len(chunk) > 100:
+            try:
+                img_data = BytesIO(chunk)
+                img = cv.imdecode(np.frombuffer(img_data.read(),np.uint8),1)
+                gray = cv.cvtColor(img,cv.COLOR_BGR2GRAY)
+                cv.imshow(name,img)
+            except Exception as e:
+                print(str(e))
+                continue
+        if cv.waitKey(1) == ord("q"):
+            cv.destroyAllWindows()
+            print(name + " stopos streaming")
+            break
+
+def chooseCam():
+    loadCamDict()
+    opt = input("choose cam with name or type new for new cam")
+    if opt == "new":
+        n = input('What is the name for the new cam?')
+        u = input("What is the url for the cam?")
+        camDict[n] = u
+        saveCamDict()
+        return
+    url = camDict[opt] 
+    if url == None:
+        print("keine cam mit der bezeichnung {opt} gefunden")
+    showCam(opt,url)
+    
+    
+
 
 
 
@@ -164,50 +219,71 @@ def passiveMode():
 ################## SETUP ##############################
 
 
-loadCDict()
-loadCurrentDict()
 s = socket(AF_INET, SOCK_DGRAM) 
-try:
-    s.bind((IP,PORT))
-except OSError as e:
-    print("OS Error Occured")
-    print(e)
-    exit(1)
-s.settimeout(TIMEOUT)
-print(f"Server is listening on {IP}: {str(PORT)}..")
-print(f"timeout={TIMEOUT}")
+def setup():
+    global s
+    loadCDict()
+    loadCurrentDict()
+    while 1:
+        try:
+            s.bind((IP,PORT))
+            break
+        except OSError as e:
+            print(e)
+            print((IP,PORT))
+            exit(1)
+    s.settimeout(TIMEOUT)
+    print(f"Server is listening on {IP}: {str(PORT)}..")
+    print(f"timeout={TIMEOUT}")
 
 
 #################### MAIN LOOP #########################
 
-while 1:
-    try:
-        op = input("\n++++++++++++++++++++++\nWas möchtest du tun?\n>>\t")
+def mainloop():
+    while 1:
+        try:
+            op = input("\n++++++++++++++++++++++\nWas möchtest du tun?\n>>\t")
 
-        if op == "listen" or op == "l":
-            handleData()
-        elif op == "quit" or op == "q":
-            exit(0)
-        elif op == "timeout" or op == "t":
-            handleTimeoutChange()
-        elif op == "send" or op == "s":
-            handleSend()
-        elif op == "new" or op == "n":
-            handleNewEntry()
-        elif op == "passiv":
-            passiveMode()
-        elif op == "help" or op == "h":
-            help()
-        else:
-            print(f"Keine option mit der Bezeichung {op}")
-            help()
-    except EOFError:
-        continue
-    except KeyboardInterrupt:
-        print("\nAbbruch..")
-        exit(1)
+            if op == "listen" or op == "l":
+                handleData()
+            elif op == "quit" or op == "q":
+                exit(0)
+            elif op == "timeout" or op == "t":
+                handleTimeoutChange()
+            elif op == "send" or op == "s":
+                handleSend()
+            elif op == "new" or op == "n":
+                handleNewEntry()
+            elif op == "passiv":
+                passiveMode()
+            elif op == "help" or op == "h":
+                help()
+            elif op == "background":
+                backgroundMode()
+            elif op == "cams":
+                chooseCam()
+            else:
+                print(f"Keine option mit der Bezeichung {op}")
+                help()
+        except EOFError:
+            continue
+        except KeyboardInterrupt:
+            print("\nAbbruch..")
+            exit(1)
 
+
+################## MAIN SECTION ##############
     
-
-
+setup()
+if len(sys.argv) == 2:
+    op = sys.argv[1]
+    if op == "normal" or op == "" or op == None:
+        mainloop()
+    elif op == "passiv":
+        passiveMode()
+    else:
+        print("no such option!")
+        exit(1)
+else:
+    mainloop()
 
