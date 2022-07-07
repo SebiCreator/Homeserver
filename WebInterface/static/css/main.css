@@ -1,4 +1,25 @@
 body {
-    margin: 0;
+    background-color: #999;
+    color: #fff;
+    margin: 10;
+    padding: 25;
+    text-align: center;
     font-family: sans-serif;
+}
+
+div {
+    text-algin: center;
+    margin: auto;
+}
+
+table {
+    border: 1px solid;
+    text-align: center;
+    margin: auto;
+    padding: 10px;
+}
+
+th {
+
+    padding: 5px;
 }

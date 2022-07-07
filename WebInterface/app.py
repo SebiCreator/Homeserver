@@ -13,17 +13,11 @@ app = Flask(__name__)
 
 @app.route('/',methods=['POST','GET'])
 def index():
-    ids = list(currentDict.keys())
-    values = list(currentDict.values())
-    out = ""
-    for i in range(len(values)):
-        out += "<p>"
-        out += str(ids[i]) + " : "
-        out += str(values[i]) 
-        out += "</p>"
-        out += "\n<br>"
-    return out
-    
+    k = list(currentDict.keys())
+    s = [e.split(":")[0] for e in k]
+    t = [e.split(":")[1] for e in k]
+    v = list(currentDict.values())
+    return render_template("index.html",sensors=s,types=t,values=v,l=len(k))
     
 
 if __name__ == "__main__":

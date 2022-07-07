@@ -2,6 +2,11 @@
 
 opt=$1
 
+HPATH=/Users/sebastiankaeser/Desktop/Coding/Python/Homeserver/
+SPATH="${HPATH}Server.py"
+SPATH_="${HPATH}Server.py"
+PID="${HPATH}.serverpid"
+
 if [[ $opt == "" ]]; then
     printf "background\n"
     printf "normal\n"
@@ -10,27 +15,27 @@ if [[ $opt == "" ]]; then
 
 
 elif [[ $opt == "background" ]]; then
-    ./Server.py passiv &
+    exec $SPATH &
     SERVER_PID=$!
-    echo $SERVER_PID > .serverpid
+    echo $SERVER_PID > $PID
     echo "Process has pid: " $SERVER_PID
 
 
 elif [[ $opt == "normal" ]]; then
-    ./Server.py
+    python3 $SPATH
 
 
 
 elif [[ $opt == "kill" ]]; then
-    val=$(cat .serverpid) 
+    val=$(cat $PID) 
     kill $val
-    rm .serverpid
+    rm  $PID
     echo "Killed " $val
 
 
 elif [[ $opt == "alive" ]]; then
-    if test -f ".serverpid"; then
-        echo "Server is alive => (pid=$(cat .serverpid))"
+    if test -f $PID; then
+        echo "Server is alive => (pid=$(cat $PID)"
     else 
         echo "Server is not alive"
     fi

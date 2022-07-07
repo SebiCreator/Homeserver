@@ -10,5 +10,25 @@
 
 {% block body %}
 
+<h1>Sensoren</h2>
+
+<div>
+    <table>
+    <tr>
+        <th>Sensor</th>
+        <th>Typ</th>
+        <th>Wert</th>
+    </tr>
+    {% for i in range(l) %}
+        <tr>
+            <th>{{sensors[i]}}</th>
+            <th>{{types[i]}}</th>
+            <th>{{values[i]}}</th>
+        </tr>
+    {% endfor %}
+    </table>
+</div>
+
+
 
 {% endblock %}
