@@ -12,7 +12,9 @@ import sys, os
 import time
 import numpy as np
 from io import BytesIO
+from datetime import datetime
 from privates import *
+
 
 
 
@@ -34,7 +36,8 @@ def enablePrint():
     sys.stdout = sys.__stdout__
 
 def saveCamDict():
-    with open(DICT_PATH + "camDict,json", "w") as outfile:
+    with open(DICT_PATH + "camDict.json", "w") as outfile:
+        global camDict
         json.dump(camDict,outfile)
 
 
@@ -94,6 +97,35 @@ def killOld():
 
 ############## MAIN FUNCTIONS ###################
 
+def logData(intervall):
+    c = 0
+    try:
+        while 1:
+            try:
+                bytePair = s.recvfrom(BUFFERSIZE)
+            except timeout:
+                return
+
+            if not c % intervall == 0:
+                continue
+            message = bytePair[0].decode()
+            c += 1
+            ip = bytePair[1][0]
+            port= bytePair[1][1]
+            trans = inDict((ip,port))
+            extractMessage(trans,message)
+            print("----------")
+            if trans == None:
+                print(f"Message: {message} von ip={ip} & port={port}")
+            else:
+                print(f"Message: {message} von {trans}")
+            print("Logging on")
+            logMessage(trans,message)
+
+    except KeyboardInterrupt:
+        return
+        
+
 def handleData():
     try:
         while 1:
@@ -113,6 +145,38 @@ def handleData():
     except KeyboardInterrupt:
         print()
         return
+
+def logMessage(trans,msg):
+    logDict = {}
+    if trans == None:
+        print("Username is None")
+        return
+    path = DICT_PATH + trans + ".json"
+
+    try:
+        with open(path,'w') as file:
+            logDict = json.load(file)
+    except UnsupportedOperation:
+        print("ups")
+        pass
+
+    now = datetime.now()
+    timestamp = now.strftime("%m/%d/%y %H:%M:%S")
+    print(timestamp)
+    s = msg.split(",")
+    n = len(s)
+    for i in range(n):
+        pairs.append(s[i].split("="))
+
+    for e in pairs:
+        name = e[0]
+        num = float(e[1])
+        logDict[timestamp] = msg
+
+    with open(path,'w') as outfile:
+        json.dump(logDict,outfile)
+
+    
 
 
 def extractMessage(trans,msg):
@@ -215,6 +279,7 @@ def chooseCam():
         n = input('Cam Name?\n>>\t')
         u = input("Url?^n>>\t")
         camDict[n] = u
+        saveCamDict()
         return
     url = camDict[opt] 
     if url == None:
@@ -222,6 +287,7 @@ def chooseCam():
     showCam(opt,url)
     
     
+
 
 
 
@@ -254,7 +320,6 @@ def mainloop():
         try:
             op = input("\n++++++++++++++++++++++\nWas möchtest du tun?\n>>\t")
             saveCamDict()
-
             if op == "listen" or op == "l":
                 handleData()
             elif op == "quit" or op == "q":
@@ -273,6 +338,9 @@ def mainloop():
                 backgroundMode()
             elif op == "cams":
                 chooseCam()
+            elif op == "logging":
+                logData(1)
+
             else:
                 print(f"Keine option mit der Bezeichung {op}")
                 help()
@@ -283,7 +351,7 @@ def mainloop():
             exit(1)
 
 
-################## MAIN SECTION ##############
+################## STARTSECTION ##############
     
 if len(sys.argv) == 2:
     op = sys.argv[1]
@@ -296,6 +364,13 @@ if len(sys.argv) == 2:
     elif op == "killold":
         killOld()
         print("old proc killed")
+    elif op == "cams":
+        setup()
+        chooseCam()
+    elif op == "listen":
+        setup()
+        setup()
+        handleData()
     else:
         print("no such option!")
         exit(1)
