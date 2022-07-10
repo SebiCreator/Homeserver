@@ -3,10 +3,49 @@
 opt=$1
 
 HPATH=/Users/sebastiankaeser/Desktop/Coding/Python/Homeserver/
-SPATH="${HPATH}Server.py"
+SPATH="${HPATH}Main.py"
 WEBPATH="${HPATH}/WebInterface/app.py" 
 U_PID="${HPATH}/WebInterface/.uipid"
 PID="${HPATH}.serverpid"
+UI_ENTRY="http://127.0.0.1:5000"
+
+kill_func () {
+    val=$(cat $PID) 
+    kill $val
+    rm  $PID
+    echo "Killed ${val} (Server)" 
+}
+
+close_func () {
+    val=$(cat $U_PID)
+    kill $val
+    rm $U_PID
+    echo "Killed ${val} (UI)" 
+}
+
+is_alive () {
+    if test -f $PID; then
+        echo "Server is alive => (pid=$(cat $PID))"
+        return 1
+    else 
+        echo "Server is not alive"
+        return 0
+    fi
+}
+
+is_open () {
+    if test -f $U_PID; then
+        echo "UI is alive =>  pid=($(cat $U_PID))"
+        return 1
+    else
+        echo "UI is not alive"
+        return 0
+    fi
+}
+
+
+
+
 
 if [[ $opt == "help" ]]; then
     printf "background\n"
@@ -19,7 +58,7 @@ if [[ $opt == "help" ]]; then
 
 elif [[ $opt == "background" ]]; then
     if ! test -f $PID; then
-        ~/Desktop/Coding/Python/Homeserver/Server.py passiv & 
+        ~/Desktop/Coding/Python/Homeserver/Main.py passiv & 
         SERVER_PID=$!
         echo $SERVER_PID > $PID
         echo "Process has pid: " $SERVER_PID
@@ -36,23 +75,17 @@ elif [[ $opt == "ui" ]]; then
     python3 $WEBPATH &
     UI_PID=$!
     echo $UI_PID > $U_PID
-    open http://127.0.0.1:5000
+    open $UI_ENTRY
 
 
 elif [[ $opt == "kill" ]]; then
-    val=$(cat $PID) 
-    kill $val
-    rm  $PID
-    echo "Killed ${val} (Server)" 
+    kill_func
 
 elif [[ $opt == "open" ]]; then
-    open http://127.0.0.1:5000
+    open $UI_ENTRY
 
 elif [[ $opt == "close" ]]; then
-    val=$(cat $U_PID)
-    kill $val
-    rm $U_PID
-    echo "Killed ${val} (UI)" 
+    close_func
 
 elif [[ $opt == "closeall" ]]; then
     val=$(cat $U_PID)
@@ -66,17 +99,9 @@ elif [[ $opt == "closeall" ]]; then
     echo "Killed ${val} (Server)" 
 
 elif [[ $opt == "alive" ]]; then
-    if test -f $PID; then
-        echo "Server is alive => (pid=$(cat $PID))"
-    else 
-        echo "Server is not alive"
-    fi
+    is_alive
+    is_open
 
-    if test -f $U_PID; then
-        echo "UI is alive =>  pid=($(cat $U_PID))"
-    else
-        echo "UI is not alive"
-    fi
 
 
 
