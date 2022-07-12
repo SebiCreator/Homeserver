@@ -43,10 +43,6 @@ is_open () {
     fi
 }
 
-
-
-
-
 if [[ $opt == "help" ]]; then
     printf "background\n"
     printf "run(default)\n"
@@ -68,6 +64,8 @@ elif [[ $opt == "background" ]]; then
     fi
 
 
+
+
 elif [[ $opt == "run" || $opt == "" ]]; then
     python3 $SPATH
 
@@ -76,6 +74,9 @@ elif [[ $opt == "ui" ]]; then
     UI_PID=$!
     echo $UI_PID > $U_PID
     open $UI_ENTRY
+
+elif [[ $opt == "cam" ]]; then
+    ~/Desktop/Coding/Python/Homeserver/Main.py cam&
 
 
 elif [[ $opt == "kill" ]]; then
@@ -86,6 +87,9 @@ elif [[ $opt == "open" ]]; then
 
 elif [[ $opt == "close" ]]; then
     close_func
+
+elif [[ $opt == "listen" ]]; then
+    ~/Desktop/Coding/Python/Homeserver/Main.py listen
 
 elif [[ $opt == "closeall" ]]; then
     val=$(cat $U_PID)

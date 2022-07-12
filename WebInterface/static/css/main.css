@@ -1,25 +1,75 @@
 body {
-    background-color: #999;
-    color: #fff;
-    margin: 10;
-    padding: 25;
+    Font-family: Lucida Sans, Helvetica, Arial, sans-serif.
+    background-color: #ddd;
+    margin: 0px;
     text-align: center;
-    font-family: sans-serif;
 }
 
-div {
-    text-algin: center;
-    margin: auto;
+
+nav {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    background-color: rgb(29,185,196);
 }
 
-table {
-    border: 1px solid;
-    text-align: center;
-    margin: auto;
-    padding: 10px;
+.nav-ul {
+    width: 80%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    list-style: none;
 }
 
-th {
-
-    padding: 5px;
+.nav-ul a {
+    border: 1px solid black;
+    padding: 5px 10px;
+    border-radius: 20%;
+    text-decoration: none;
+    color : #000;
 }
+
+.heading {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    margin-top: 10px;
+
+}
+
+.maincontainer {
+    display: grid;
+    width: 100%;
+    height: 500px;
+    grid-template-columns: 1fr 1fr;
+    column-gap: 3%;
+    padding-right: 20px;
+    padding-left: 20px;
+}
+
+.sec-sensor {
+    grid-column-start: 1;
+    grid-column-end: 2;
+    border: 1px solid black;
+    border-radius: 5%;
+    padding: 5%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.sec-etc {
+    grid-column-start: 2;
+    grid-column-end: 3;
+    border: 1px solid black;
+    border-radius: 5%;
+    padding: 5%;
+}
+
+
+a:hover {
+    opacity: 50%;
+}
+
+
+

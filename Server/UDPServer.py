@@ -18,7 +18,7 @@ def enablePrint():
 
 class UDPServer:
 
-    def conig(self):
+    def config(self):
         pass
 
     def loadSensors(self):
@@ -49,11 +49,9 @@ class UDPServer:
         self.socket.settimeout(TIMEOUT)
 
     def inDict(self, addr):
-        ip = addr[0]
-        port = addr[1]
+        ip, port = addr
         for key in self.sensors:
-            if ip == key:
-                if self.sensors[key][0] == port:
+            if ip == key and self.sensors[key][0] == port:
                     return self.sensors[key][1]
         return None
 

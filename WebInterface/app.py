@@ -1,6 +1,6 @@
 #! /opt/homebrew/bin/python3
 
-from flask import Flask, render_template, url_for
+from flask import Flask, render_template, url_for, request
 import json
 import os
 
@@ -11,7 +11,7 @@ PATH = "/Users/sebastiankaeser/Desktop/Coding/Python/Homeserver/JsonData/current
 
 currentDict = {}
 
-def loadCurrentDict():
+def loadCurrentValues():
     global currentDict
     with open(PATH) as file:
         currentDict = json.load(file)
@@ -30,10 +30,11 @@ app = Flask(__name__)
 
 @app.route('/',methods=['POST','GET'])
 def index():
-    loadCurrentDict()
-    s, t, v, l = splitSensorData(currentDict)
-    return render_template("index.html",sensors=s,types=t,values=v,l=l)
-    
+    if request.method == 'GET' or request.method == 'POST':
+        loadCurrentValues()
+        s, t, v, l = splitSensorData(currentDict)
+        return render_template("index.html",sensors=s,types=t,values=v,l=l)
+        
 
 if __name__ == "__main__":
     app.run(debug=True)

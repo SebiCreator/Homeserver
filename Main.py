@@ -3,23 +3,15 @@
 
 INCLUDE_PATH = "/Users/sebastiankaeser/Desktop/Coding/Python/Homeserver/Server"
 
-
-
 from socket import *
 from threading import *
-import requests
 import time
 import json
-import cv2 as cv
 import sys, os
-import time
-import numpy as np
-from io import BytesIO
-from datetime import datetime
-import sys
 
+
+# Proper Imports
 sys.path.insert(0,INCLUDE_PATH)
-
 
 
 from privates import *
@@ -27,17 +19,8 @@ from CamHandler import CamHandler
 from UDPServer import UDPServer
 
 
-
-################## SETUP ##############################
-
-
 camHandler = CamHandler()
 udpServer = UDPServer()
-
-
-#################### MAIN LOOP #########################
-
-
 
 def mainloop():
     while 1:
@@ -62,7 +45,6 @@ def mainloop():
             exit(1)
 
 
-################## ARGV PARSING ##############
     
 if len(sys.argv) == 2:
     op = sys.argv[1]
@@ -72,6 +54,8 @@ if len(sys.argv) == 2:
         udpServer.passivMode()
     elif op == "cam":
         camHandler.chooseCam()
+    elif op == "listen":
+        udpServer.handleData()
     else:
         print("no such option!")
         exit(1)
