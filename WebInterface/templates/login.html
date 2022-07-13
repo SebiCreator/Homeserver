@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+
+
+
+{% block head %}
+<title>Login-Page</title>
+{% endblock %}
+
+
+
+
+
+{% block heading %}
+<h1 class="heading">Login</h1>
+{% endblock %}
+
+
+
+
+
+{% block body %}
+<form type="POST">
+    <label for="email">Email:</label>
+    <input name="email" type="text"></inpu>
+    <label for="password">Password:</label>
+    <input name="password" type="password" placeholder="Enter password"></input>
+    <button type="submit">Login</button>
+</form>
+{% endblock %}
+   

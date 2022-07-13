@@ -11,14 +11,15 @@
 
 
 
+{% block heading %}
+<h1 class="heading">Sensors</h1>
+{% endblock %}
+
 
 
 
 {% block body %}
 
-<div class='heading'>
-    <h1>Sensors</h2>
-</div>
 
 <div class="maincontainer">
 
@@ -40,7 +41,7 @@
     </div> 
 
     <div class='sec-etc'>
-        <form action="{{ url_for('index') }}" method="post">
+        <form action="{{ url_for('views.index') }}" method="post">
             <button type="submit">reload</button>
         </form>
     </div>

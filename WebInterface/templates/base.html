@@ -9,11 +9,29 @@
   </head>
   <body>
       <nav>
+        {% block heading %}{% endblock %}
         <ul class='nav-ul'>
-            <li><a href="">Login</a></li>
-            <li><a href="">Logout</a></li>
-            <li><a href="">Contact</a></li>
-            <li><a href="">About</a></li>
+            <li><a href="">Project</a></li>
+            <li><a href="">Menu</a></li>
+            <li><a href="">Settings</a></li>
+            <form class="searchform" action={{ url_for('views.search') }} method='POST' >
+                <input name="searchinput" id="searchinput",class="searchinput"></input>
+                <button type="submit" class="search-btn">Search</input>
+            </form>
+
+            {% if logged_in %}
+
+            <form action={{ url_for('auth.login') }}>
+                <button type="submit" class="login-btn btn">Log in</button>
+            </form>
+
+            {% else %}
+
+            <form action={{ url_for('auth.logout') }}>
+                <button type="submit" class="logout-btn btn">Log out</button>
+            </form>
+
+            {% endif %}
         </ul>
       </nav>
     {% block body %}{% endblock %}

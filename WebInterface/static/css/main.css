@@ -1,8 +1,10 @@
 body {
-    Font-family: Lucida Sans, Helvetica, Arial, sans-serif.
-    background-color: #ddd;
+    Font-family: Lucida Sans, Helvetica, Arial, sans-serif;
+    background-image: linear-gradient(to bottom right,rgb(0,69,211),rgb(124,152,209));
     margin: 0px;
     text-align: center;
+    font-size: 18px;
+    height: 100%;
 }
 
 
@@ -10,7 +12,14 @@ nav {
     display: flex;
     flex-direction: row;
     justify-content: space-evenly;
-    background-color: rgb(29,185,196);
+    background-color: rgb(107,141,194);
+}
+
+.heading {
+    float: left;
+    padding: 0px 0px 0px  15px;
+    margin: 0;
+    font-size: 170%;
 }
 
 .nav-ul {
@@ -19,56 +28,98 @@ nav {
     flex-direction: row;
     justify-content: space-evenly;
     list-style: none;
+    margin: auto auto;
+    padding: auto auto;
+    margin: 0;
 }
+
+.nav-ul li {
+    margin: auto auto;
+}
+
+
 
 .nav-ul a {
-    border: 1px solid black;
-    padding: 5px 10px;
-    border-radius: 20%;
+    height: 100%;
     text-decoration: none;
     color : #000;
+    margin: 0 auto;
 }
 
-.heading {
+.nav-ul a:hover {
+    background-color: rgb(143,170,213);
+}
+
+.searchform {
+    height: 100%;
     display: flex;
-    flex-direction: row;
     justify-content: center;
-    margin-top: 10px;
-
+    padding: 0 10%;
 }
+
+.searchinput {
+    margin: 5%;    
+    padding: 10%;
+}
+
+
+.search-btn {
+    margin: auto, 0;
+}
+
+.btn {
+    margin: 0, 10%;
+    border-radius: 25%;
+}
+
+.login-btn {
+    background-color: red;
+    color: #000;
+}
+
+.logout-btn {
+    background-color: green;
+    color: #fff;
+}
+
+
+
+
 
 .maincontainer {
-    display: grid;
+    display: flex;
     width: 100%;
-    height: 500px;
-    grid-template-columns: 1fr 1fr;
-    column-gap: 3%;
-    padding-right: 20px;
-    padding-left: 20px;
+    height: 600px;
+    flex-direction: row;
+    justify-content: space-around;
+
 }
 
 .sec-sensor {
-    grid-column-start: 1;
-    grid-column-end: 2;
-    border: 1px solid black;
     border-radius: 5%;
     padding: 5%;
     display: flex;
+    height: 50%;
+    margin: 5%;
     flex-direction: column;
     justify-content: center;
+    background-color: rgb(151,178,232);
 }
 
 .sec-etc {
-    grid-column-start: 2;
-    grid-column-end: 3;
-    border: 1px solid black;
+    height: 40%;
     border-radius: 5%;
     padding: 5%;
+    margin: 5%;
+    background-color: rgb(151,178,232);
+    margin-right: 35%;
+
 }
 
 
 a:hover {
     opacity: 50%;
+    text-decoration: underline;
 }
 
 
