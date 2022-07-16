@@ -2,6 +2,8 @@ import json
 import os
 import sys
 import time
+from Server.utils import printError, printSucess
+import utils
 
 
 from socket import *
@@ -10,10 +12,13 @@ from privates import *
 BUFFERSIZE = 1024
 TIMEOUT = 10
 
+
 def disablePrint():
-     sys.stdout = open(os.devnull,'w')
+    sys.stdout = open(os.devnull, 'w')
+
+
 def enablePrint():
-     sys.stdout = sys.__stdout__
+    sys.stdout = sys.__stdout__
 
 
 class UDPServer:
@@ -43,7 +48,7 @@ class UDPServer:
         self.socket = socket(AF_INET, SOCK_DGRAM)
         try:
             self.socket.bind((IP, PORT))
-            print("[SUCESSFULLY CONNECTED] IP=%s, PORT=%s" % (IP , PORT))
+            print("[SUCESSFULLY CONNECTED] IP=%s, PORT=%s" % (IP, PORT))
         except OSError as e:
             print(e)
         self.socket.settimeout(TIMEOUT)
@@ -52,10 +57,13 @@ class UDPServer:
         ip, port = addr
         for key in self.sensors:
             if ip == key and self.sensors[key][0] == port:
-                    return self.sensors[key][1]
+                return self.sensors[key][1]
         return None
 
-    def extractMessage(self, trans, msg):
+    def extractMessage(self, translation, msg):
+        if translation == None:
+            translation = "Unknown Device"
+        out = {}
         s = msg.split(",")
         n = len(s)
         pairs = []
@@ -64,11 +72,15 @@ class UDPServer:
 
         for e in pairs:
             name = e[0]
+            if e[1] in ["nan", None, "None", "Nan", "NULL", "null"]:
+                printError("BAD_DATA", "Device: %s Sensor: %s" % (translation, name))
+                continue
             num = float(e[1])
-            self.current[f"{trans}:{name}"] = num
+            self.current[f"{translation}:{name}"] = num
+            out[f"{translation}:{name}"] = num
             self.savecurrentValues()
 
-        #temp=32.40,hum=99.90
+        return out
 
     def handleData(self):
         try:
@@ -77,17 +89,12 @@ class UDPServer:
                     bytePair = self.socket.recvfrom(BUFFERSIZE)
                 except timeout:
                     return
+
                 message = bytePair[0].decode()
                 addr = bytePair[1]
-                trans = self.inDict(addr)
-                self.extractMessage(trans, message)
-                print("----------")
-                if trans == None:
-                    print(
-                        f"Message: {message} von IP=({addr[0]}) & Port=({addr[1]}"
-                    )
-                else:
-                    print(f"Message: {message} von {trans}")
+                translation = self.inDict(addr)
+                out = self.extractMessage(translation, message)
+                printSucess("NEW_PACKET",str(out)) if out != {} else ""
         except KeyboardInterrupt:
             print()
             return
