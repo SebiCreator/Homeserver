@@ -20,12 +20,15 @@
 
 
 {% block body %}
-<form method="post" action="{{ url_for('auth.login') }}">
-    <label for="email">Email:</label>
-    <input name="email" type="text"></inpu>
-    <label for="password">Password:</label>
-    <input name="password" type="password" placeholder="Enter password"></input>
-    <button type="submit">Login</button>
-</form>
+<h2 class="login-heading">Please Login</h2>
+<div class="login-formgroup">
+    <form method="post" action="{{ url_for('auth.login') }}">
+        <label for="email">Email:</label>
+        <input name="email" type="text"></inpu>
+        <label for="password">Password:</label>
+        <input name="password" type="password" placeholder="Enter password"></input>
+</div>
+        <button class="login-btn" type="submit">Login</button>
+    </form>
 {% endblock %}
    

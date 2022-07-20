@@ -5,47 +5,40 @@ from . import db
 from flask_login import login_user, login_required, logout_user, current_user
 
 
-auth = Blueprint('auth',__name__)
+auth = Blueprint('auth', __name__)
 
 
-@auth.route("/login", methods=["POST","GET"])
+@auth.route("/login", methods=["POST", "GET"])
 def login():
     print(request.method)
     if request.method == "POST":
-        print("AA")
         email = request.form.get('email')
         pwd = request.form.get('password')
-        print("BBj")
 
         user = User.query.filter_by(email=email).first()
-        print(user)
 
         if user:
-            print("CC")
-            if check_password_hash(user.password,pwd):
-                print("DD")
-                flash('Logged in successfully',category='sucess')
-                login_user(user,remember=True)
+            if check_password_hash(user.password, pwd):
+                flash('Logged in successfully', category='sucess')
+                login_user(user, remember=True)
                 print("logged in")
                 return redirect(url_for('views.dashboard'))
             else:
-                flash('Incorrect Password, please try again',category='error')
+                flash('Incorrect Password, please try again', category='error')
         else:
-            flash('Email does not exist',category='error')
+            flash('Email does not exist', category='error')
 
-    return render_template('login.html',user=current_user)
+    return render_template('login.html', user=current_user)
 
 
-@auth.route("/logout",methods=["POST","GET"])
+@auth.route("/logout", methods=["POST", "GET"])
 @login_required
 def logout():
     logout_user()
     return redirect(url_for('auth.login'))
 
 
-
-
-@auth.route('/sign-up', methods=['GET','POST'])
+@auth.route('/sign-up', methods=['GET', 'POST'])
 def sign_up():
     print(request.method)
     if request.method == 'POST':
@@ -56,28 +49,23 @@ def sign_up():
         password2 = request.form.get('password2')
 
         #user = User.query.filter_by(email=email).first()
-        #if user:
+        # if user:
         #    flash('Email already exists',category='error')
         #    print("a")
         if len(email) < 4:
-            flash('Email must be greater than 4 chars',category='error')
-            print("b")
+            flash('Email must be greater than 4 chars', category='error')
         elif len(first_name) < 2:
-            flash('Fairst names must be longer than 2 chars',category='error')
-            print("c")
+            flash('Fairst names must be longer than 2 chars', category='error')
         elif password1 != password2:
-            flash('Passwords dont match',category='error')
-            print("d")
+            flash('Passwords dont match', category='error')
         elif len(password1) < 7:
-            print("e")
-            flash('Password must be at least 7 chars',category='error')
+            flash('Password must be at least 7 chars', category='error')
         else:
-            new_user = User(email=email,first_name=first_name,password=generate_password_hash(
+            new_user = User(email=email, first_name=first_name, password=generate_password_hash(
                 password1, method='sha256'))
             db.session.add(new_user)
             db.session.commit()
-            login_user(new_user,remember=True)
-            return redirect(url_for('views.home'))
+            login_user(new_user, remember=True)
+            return redirect(url_for('views.dashboard'))
 
-    return render_template('sign_up.html',user=current_user)
-
+    return render_template('sign_up.html', user=current_user)

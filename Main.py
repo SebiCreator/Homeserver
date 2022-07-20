@@ -1,26 +1,29 @@
-#! /opt/homebrew/bin/python3 
+#! /opt/homebrew/bin/python3
 
 
+import os
+import sys
+from UDPServer import UDPServer
+from CamHandler import CamHandler
+from privates import *
+from WebInterface import create_app
+from WebInterface.utils import *
+import json
+import time
+from threading import *
+from socket import *
 INCLUDE_PATH = "/Users/sebastiankaeser/Desktop/Coding/Python/Homeserver/Server"
 
-from socket import *
-from threading import *
-import time
-import json
-import sys, os
 
+app = create_app()
 
 # Proper Imports
-sys.path.insert(0,INCLUDE_PATH)
-
-
-from privates import *
-from CamHandler import CamHandler
-from UDPServer import UDPServer
+sys.path.insert(0, INCLUDE_PATH)
 
 
 camHandler = CamHandler()
 udpServer = UDPServer()
+
 
 def mainloop():
     while 1:
@@ -28,14 +31,22 @@ def mainloop():
             op = input("\n++++++++++++++++++++++\nWas möchtest du tun?\n>>\t")
             if op == "udp":
                 udpServer.serve()
-            if op == "passiv":
+            elif op == "passiv":
                 udpServer.passivMode()
-            if op == "udpconfig":
+            elif op == "udpconfig":
                 udpServer.config()
-            if op == "cam":
+            elif op == "cam":
                 camHanlder.chooseCam()
-            if op == "listen":
+            elif op == "listen":
                 udpServer.handleData()
+            elif op == "add-room":
+                new_room()
+            elif op == "add-unit":
+                new_unit()
+            elif op == "add-device":
+                new_device()
+            elif op == "add-sensor":
+                new_sensor()
             else:
                 print("Keine option mit der Bezeichung %s" % op)
         except EOFError:
@@ -45,7 +56,6 @@ def mainloop():
             exit(1)
 
 
-    
 if len(sys.argv) == 2:
     op = sys.argv[1]
     if op == "normal" or op == "" or op == None:
@@ -61,4 +71,3 @@ if len(sys.argv) == 2:
         exit(1)
 else:
     mainloop()
-

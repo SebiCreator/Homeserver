@@ -36,4 +36,4 @@ def disablePrint():
 
 
 def enablePrint():
-    sys.stdout = sys.__stdout__
+    sys.stdout = sys.__stdout__pass
