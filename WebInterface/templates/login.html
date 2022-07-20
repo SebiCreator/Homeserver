@@ -20,7 +20,7 @@
 
 
 {% block body %}
-<form type="POST">
+<form method="post" action="{{ url_for('auth.login') }}">
     <label for="email">Email:</label>
     <input name="email" type="text"></inpu>
     <label for="password">Password:</label>

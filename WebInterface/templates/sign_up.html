@@ -15,7 +15,7 @@
 
 
 {% block body %}
-<form type="POST">
+<form method="post" action="{{ url_for('auth.sign_up') }}">
     <input name="email" type="text" placeholder="email"></input>
     <input name="firstName" type="text" placeholder="first name"></input>
     <input name="password1" type="password1" placeholder="password"></input>

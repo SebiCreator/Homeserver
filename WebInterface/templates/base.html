@@ -19,19 +19,12 @@
                 <button type="submit" class="search-btn">Search</input>
             </form>
 
-            {% if logged_in %}
 
-            <form action={{ url_for('auth.login') }}>
-                <button type="submit" class="login-btn btn">Log in</button>
+            <form method="post" action="{{ url_for('auth.logout') }}"">
+                <button type="submit" class="login-btn btn">Loggg </button>
             </form>
 
-            {% else %}
 
-            <form action={{ url_for('auth.logout') }}>
-                <button type="submit" class="logout-btn btn">Log out</button>
-            </form>
-
-            {% endif %}
         </ul>
       </nav>
     {% block body %}{% endblock %}

@@ -18,6 +18,8 @@ def create_app():
     app.register_blueprint(views,url_prefix="/")
     app.register_blueprint(auth,url_prefix="/")
 
+    from .DBModels import User 
+
     create_database(app)
 
     login_manager = LoginManager()
@@ -30,6 +32,8 @@ def create_app():
         return User.query.get(int(u))
 
     return app
+    
+
 
 def create_database(app):
     if not path.exists('WebInterface/' + DB_NAME):

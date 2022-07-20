@@ -2,12 +2,11 @@
 
 opt=$1
 
-HPATH=/Users/sebastiankaeser/Desktop/Coding/Python/Homeserver/
-SPATH="${HPATH}Main.py"
-WEBPATH="${HPATH}/WebInterface/app.py" 
-U_PID="${HPATH}/WebInterface/.uipid"
+ROOTPATH="~/Desktop/Coding/Python/Homeserver"
+SPATH="${ROOTPATH}/Main.py"
+WEBPATH="${ROOTPATH}/UI.py" 
+U_PID="${ROOTPATH}WebInterface/.uipid"
 PID="${HPATH}.serverpid"
-UI_ENTRY="http://127.0.0.1:5000"
 
 kill_func () {
     val=$(cat $PID) 
@@ -53,15 +52,7 @@ if [[ $opt == "help" ]]; then
 
 
 elif [[ $opt == "background" ]]; then
-    if ! test -f $PID; then
-        ~/Desktop/Coding/Python/Homeserver/Main.py passiv & 
-        SERVER_PID=$!
-        echo $SERVER_PID > $PID
-        echo "Process has pid: " $SERVER_PID
-        exit
-    else
-        echo "Server already running.. ip=($(cat $PID))"
-    fi
+    ~/Desktop/Coding/Python/Homeserver/Main.py passiv & 
 
 
 
@@ -75,8 +66,6 @@ elif [[ $opt == "ui" ]]; then
     echo $UI_PID > $U_PID
     open $UI_ENTRY
 
-elif [[ $opt == "cam" ]]; then
-    ~/Desktop/Coding/Python/Homeserver/Main.py cam&
 
 
 elif [[ $opt == "kill" ]]; then
@@ -105,8 +94,6 @@ elif [[ $opt == "closeall" ]]; then
 elif [[ $opt == "alive" ]]; then
     is_alive
     is_open
-
-
 
 
 else 

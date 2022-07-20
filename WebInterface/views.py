@@ -1,42 +1,29 @@
-from flask import Blueprint, render_template, request, flash, jsonify, url_for
+from flask import Blueprint, redirect, render_template, request, flash, jsonify, url_for
 from flask_login import login_required, current_user
 #from .models import SensorData
 from . import db
 import json
 import os
+from .utils import *
 
 
 
 PATH = "/Users/sebastiankaeser/Desktop/Coding/Python/Homeserver/JsonData/currentDict.json"
 
-currentDict = {}
-
-
-
-
-def loadCurrentValues():
-     global currentDict
-     with open(PATH) as file:
-         currentDict = json.load(file)
-
-def splitSensorData(d):
-    k = list(d.keys())
-    s = [e.split(":")[0] for e in k]
-    t = [e.split(":")[1] for e in k]
-    v = list(d.values())
-    l = len(k)
-    return s, t, v, l
-
-
-
 views = Blueprint('views',__name__)
 
+@views.route("/")
+def root():
+    if current_user.is_authenticated:
+        return redirect(url_for("views.dashboard"))
+    else:
+        return redirect(url_for("auth.login"))
 
 
-
-@views.route("/",methods=["GET","POST"])
-def index():
-    loadCurrentValues()
+@views.route("/dashboard",methods=["GET","POST"])
+@login_required
+def dashboard():
+    currentDict = loadJSONDict(PATH)
     s, t, v, l = splitSensorData(currentDict)
     return render_template("index.html",sensors=s,types=t,values=v,l=l)
 

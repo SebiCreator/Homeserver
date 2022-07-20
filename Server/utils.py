@@ -1,4 +1,5 @@
-import string
+import sys
+import os
 
 
 class bcolors:
@@ -27,3 +28,12 @@ def printWarning(category: str, msg: str):
 def printSucess(category: str, msg: str):
     print(bcolors.OKGREEN+ "[%s]\t" %
           category + bcolors.G_TEXT + msg + bcolors.ENDC)
+
+
+
+def disablePrint():
+    sys.stdout = open(os.devnull, 'w')
+
+
+def enablePrint():
+    sys.stdout = sys.__stdout__

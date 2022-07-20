@@ -3,7 +3,7 @@ import os
 import sys
 import time
 from Server.utils import printError, printSucess
-import utils
+from utils import *
 
 
 from socket import *
@@ -11,14 +11,6 @@ from privates import *
 
 BUFFERSIZE = 1024
 TIMEOUT = 10
-
-
-def disablePrint():
-    sys.stdout = open(os.devnull, 'w')
-
-
-def enablePrint():
-    sys.stdout = sys.__stdout__
 
 
 class UDPServer:
@@ -53,6 +45,8 @@ class UDPServer:
             print(e)
         self.socket.settimeout(TIMEOUT)
 
+    # Checkt ob ob Adresse bekannt ist oder nicht
+    # Returnt Übersetzung oder None falls nicht vorhanden
     def inDict(self, addr):
         ip, port = addr
         for key in self.sensors:
@@ -60,6 +54,7 @@ class UDPServer:
                 return self.sensors[key][1]
         return None
 
+    # Extrahiert Paket von Sensor printet und speichert es
     def extractMessage(self, translation, msg):
         if translation == None:
             translation = "Unknown Device"
@@ -73,7 +68,8 @@ class UDPServer:
         for e in pairs:
             name = e[0]
             if e[1] in ["nan", None, "None", "Nan", "NULL", "null"]:
-                printError("BAD_DATA", "Device: %s Sensor: %s" % (translation, name))
+                printError("BAD_DATA", "Device: %s Sensor: %s" %
+                           (translation, name))
                 continue
             num = float(e[1])
             self.current[f"{translation}:{name}"] = num
@@ -82,6 +78,7 @@ class UDPServer:
 
         return out
 
+    # Wartet auf UDP Datenpakete
     def handleData(self):
         try:
             while 1:
@@ -94,11 +91,12 @@ class UDPServer:
                 addr = bytePair[1]
                 translation = self.inDict(addr)
                 out = self.extractMessage(translation, message)
-                printSucess("NEW_PACKET",str(out)) if out != {} else ""
+                printSucess("NEW_PACKET", str(out)) if out != {} else ""
         except KeyboardInterrupt:
             print()
             return
 
+    # Ändert den Timeout Wert
     def handleTimeoutChange(self):
         try:
             t = int(input("Wie lange soll der Timeout gehen?\n>>\t"))
@@ -108,6 +106,7 @@ class UDPServer:
         except KeyboardInterrupt:
             return
 
+    # Sendet UDP Paket (args über input)
     def handleSend(self):
         try:
             ip = input("Bitte gib die Target-IP an\n>>\t")
@@ -118,6 +117,7 @@ class UDPServer:
         except KeyboardInterrupt:
             return
 
+    # Speichert neues Device mit Namen (args über input)
     def handleNewEntry(self):
         try:
             addr = input("Bitte gib IP und Port an (space als seperator)\n>>\t"
@@ -131,6 +131,8 @@ class UDPServer:
             self.saveSensors()
         except KeyboardInterrupt:
             return
+
+    # verarbeitet UDP Pakete im Hintergrund
 
     def passivMode(self):
         c = 0
