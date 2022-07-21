@@ -16,14 +16,14 @@
 
 {% block body %}
 <h2 class="signup-heading">Register for new Account </h2>
-<div class="signup-formgroup"
+<div class="signup-formgroup">
     <form method="post" action="{{ url_for('auth.sign_up') }}">
         <input name="email" type="text" placeholder="email"></input>
         <input name="firstName" type="text" placeholder="first name"></input>
         <input name="password1" type="password1" placeholder="password"></input>
         <input name="password2" type="password2" placeholder="password"></input>
-</div>
         <button class="signup-btn" type="submit">SUBMIT</button>
+</div>
     <form>
 {% endblock %}
    

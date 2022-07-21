@@ -28,7 +28,10 @@
         <label for="password">Password:</label>
         <input name="password" type="password" placeholder="Enter password"></input>
 </div>
-        <button class="login-btn" type="submit">Login</button>
+        <button class="login-form-btn" type="submit">Login</button>
+    </form>
+    <form method="get" action="{{  url_for('auth.sign_up')}}">
+        <button class="signup-form-btn">Signup</button>
     </form>
 {% endblock %}
    

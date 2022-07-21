@@ -44,14 +44,15 @@
         </div>
       {% else %}
         <div class="flush good-flush">
-          {{message}}
+         {{message}}
           <button>
             <span aria-hidden="true">&times;</span>
           </button>
+        </div>
       {% endif %}
       {% endfor %}
       {% endif %}
       {% endwith %} 
-    {% block body %}{% endblock %}
+  {% block body %}{% endblock %}
   </body>
 </html>

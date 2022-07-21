@@ -1,8 +1,16 @@
 #! /opt/homebrew/bin/python3
 
 
-import os
+
+INCLUDE_PATH = "/Users/sebastiankaeser/Desktop/Coding/Python/Homeserver/Server"
+
+
+
 import sys
+# Proper Imports
+sys.path.insert(0, INCLUDE_PATH)
+
+import os
 from UDPServer import UDPServer
 from CamHandler import CamHandler
 from privates import *
@@ -12,13 +20,8 @@ import json
 import time
 from threading import *
 from socket import *
-INCLUDE_PATH = "/Users/sebastiankaeser/Desktop/Coding/Python/Homeserver/Server"
-
 
 app = create_app()
-
-# Proper Imports
-sys.path.insert(0, INCLUDE_PATH)
 
 
 camHandler = CamHandler()

@@ -21,7 +21,6 @@ def login():
             if check_password_hash(user.password, pwd):
                 flash('Logged in successfully', category='sucess')
                 login_user(user, remember=True)
-                print("logged in")
                 return redirect(url_for('views.dashboard'))
             else:
                 flash('Incorrect Password, please try again', category='error')
@@ -42,16 +41,14 @@ def logout():
 def sign_up():
     print(request.method)
     if request.method == 'POST':
-        print(request)
         email = request.form.get('email')
         first_name = request.form.get('firstName')
         password1 = request.form.get('password1')
         password2 = request.form.get('password2')
 
-        #user = User.query.filter_by(email=email).first()
-        # if user:
-        #    flash('Email already exists',category='error')
-        #    print("a")
+        user = User.query.filter_by(email=email).first()
+        if user:
+            flash('Email already exists',category='error')
         if len(email) < 4:
             flash('Email must be greater than 4 chars', category='error')
         elif len(first_name) < 2:
