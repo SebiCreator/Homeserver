@@ -12,6 +12,7 @@
 
 
 {% block heading %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/login.css')  }}">
 <h1 class="heading">Login</h1>
 {% endblock %}
 
@@ -24,14 +25,16 @@
 <div class="login-formgroup">
     <form method="post" action="{{ url_for('auth.login') }}">
         <label for="email">Email:</label>
-        <input name="email" type="text"></inpu>
+        <input name="email" type="text" placeholder="Enter email"></input>
         <label for="password">Password:</label>
         <input name="password" type="password" placeholder="Enter password"></input>
 </div>
-        <button class="login-form-btn" type="submit">Login</button>
+<div class="login-button-group">
+        <button class="login-form-btn btn" type="submit">Login</button>
     </form>
     <form method="get" action="{{  url_for('auth.sign_up')}}">
-        <button class="signup-form-btn">Signup</button>
+        <button class="signup-form-btn btn">Signup</button>
     </form>
+</div>
 {% endblock %}
    

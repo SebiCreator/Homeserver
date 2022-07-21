@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 
 {% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/sign-up.css')  }}">
 <title>Sign-Up</title>
 {% endblock %}
 
@@ -18,11 +19,15 @@
 <h2 class="signup-heading">Register for new Account </h2>
 <div class="signup-formgroup">
     <form method="post" action="{{ url_for('auth.sign_up') }}">
+        <label for="email">Email:</label>
         <input name="email" type="text" placeholder="email"></input>
+        <label for="firstName">First Name:</label>
         <input name="firstName" type="text" placeholder="first name"></input>
+        <label for="password1">Password</label>
         <input name="password1" type="password1" placeholder="password"></input>
+        <label for="password2">Passwordd</label>
         <input name="password2" type="password2" placeholder="password"></input>
-        <button class="signup-btn" type="submit">SUBMIT</button>
+        <button class="signup-btn btn" type="submit">SUBMIT</button>
 </div>
     <form>
 {% endblock %}

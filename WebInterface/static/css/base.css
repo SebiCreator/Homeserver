@@ -86,6 +86,9 @@ nav {
   
   .flush button {
 	float: right;
-	border-radius: 10px;
+	border-radius: 30%;
+	margin: auto auto;
+	padding: 4px;
+	border: none;
   }
   
