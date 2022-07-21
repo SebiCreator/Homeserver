@@ -1,0 +1,35 @@
+.login-heading {
+    margin-top: 60px;
+}
+
+.login-formgroup {
+    margin-top: 60px;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.login-formgroup form {
+    text-align: center;
+    border: solid 1px black;
+    margin: 10px 15px;
+    padding: 10px 15px;
+    border-radius: 5%;
+}
+
+.login-formgroup input {
+    border: none;
+    border-radius: 5%;
+    margin: 10px;
+    padding: 15px;
+    text-align: center;
+    display: inline-block;
+}
+
+.login-formgroup label {
+    margin 10px;
+    padding 15px;
+    text-align: center;
+    display: block;
+}

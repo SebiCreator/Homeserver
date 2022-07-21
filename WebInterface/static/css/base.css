@@ -1,0 +1,91 @@
+nav {
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+	align-items: center;
+	background-color: rgb(107, 141, 194);
+	margin: 0;
+	padding: 10px;
+	padding-left: 0px;
+	width: 100%;
+  }
+  
+  .heading {
+	float: left;
+	margin: 0;
+	font-size: 170%;
+  }
+  
+  .nav-ul {
+	width: 80%;
+	height: 100%;
+	display: flex;
+	flex-direction: row;
+	justify-content: space-evenly;
+	align-items: center;
+	list-style: none;
+	margin: 0;
+	padding: 0;
+  }
+  
+  .nav-ul li {
+	margin: auto auto;
+  }
+  
+  .nav-ul a {
+	height: 100%;
+	text-decoration: none;
+	color: #555;
+	margin: 0 auto;
+  }
+  
+  .searchform {
+	height: 100%;
+	display: flex;
+	justify-content: center;
+	padding: 0 10%;
+  }
+  
+  .searchinput {
+	margin: 5%;
+	padding: 10%;
+  }
+  
+  .search-btn {
+	margin: auto, 0;
+  }
+  
+  .login-btn {
+	background-color: green;
+	color: #000;
+  }
+  
+  .logout-btn {
+	background-color: red;
+	color: #fff;
+  }
+  
+
+  
+  .flush {
+	padding: 5px;
+	border-radius: 2%;
+  }
+  
+  a:hover {
+	color: #000;
+  }
+  
+  .bad-flush {
+	background-color: rgb(240, 86, 112);
+  }
+  
+  .good-flush {
+	background-color: rgb(97, 240, 86);
+  }
+  
+  .flush button {
+	float: right;
+	border-radius: 10px;
+  }
+  
