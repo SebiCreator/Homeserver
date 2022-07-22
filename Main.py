@@ -16,7 +16,7 @@ from CamHandler import CamHandler
 from privates import *
 from WebInterface import create_app
 from WebInterface.utils import *
-from WebInterface.dbmanagement import *
+from Server.dbmanagement import *
 import json
 import time
 from threading import *

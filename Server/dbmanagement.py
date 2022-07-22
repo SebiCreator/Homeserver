@@ -16,9 +16,20 @@ def getTables(cur):
     return ("CURRENT TABLES:\t" + str(tables))
 
 
+def getIDMax(cur, table):
+    statement = "SELECT MAX(id) from %s" % table
+    try:
+        cur.execute(statement)
+    except sqlite3.OperationalError:
+        print("Error in IDMax occured")
+        return None
+    return int(cur.fetchall()[0][0])
+
+
 def dbEasyAdd():
     con = sqlite3.connect(DATABASE_PATH)
     cur = con.cursor()
+    getIDMax(cur, "sensor")
     print(getTables(cur))
     table = finput("Which table do you want to add something?")
     if table == 'sensor':
@@ -42,11 +53,15 @@ def addStatement():
     cur = con.cursor()
 
     statement = finput("Bitte SQL-Statement angeben:")
-    cur.execute(statement)
+    try:
+        cur.execute(statement)
+    except sqlite3.OperationalError:
+        print("Bad Statement, please try again")
+        return
 
     res = [x[0] for x in cur.fetchall()]
     print("STATEMENT RESULT")
-    for idx,e in enumerate(res):
+    for idx, e in enumerate(res):
         print("[%s]\t%s" % (idx, e))
 
     con.commit()
@@ -63,7 +78,22 @@ def new_device(cur):
     cur.execute(statement)
     select = "Select * from device where device.name ='%s'" % name
     for e in cur.execute(select):
-        print(e)
+        print(e[0])
+
+
+def new_user(cur):
+    next_id = getIDMax(cur, "user") + 1
+    first_name = finput("First Name:")
+    email = finput("Name:")
+    password = finput("Password:")
+
+    statement = "Insert into user values ('%s','%s','%s','%s')" % (
+        next_id, first_name, email, password)
+    
+    cur.execute(statement)
+    select = "Select * from user where user.id = '%s'" % next_id
+    for e in cur.excecute(select):
+        print(e[0])
 
 
 def new_unit(cur):
@@ -72,40 +102,47 @@ def new_unit(cur):
     cur.execute(statement)
     select = "Select * from unit where unit.name = '%s'" % name
     for e in cur.execute(select):
-        print(e)
+        print(e[0])
 
 
 def new_sensor(cur):
+    next_id = getIDMax(cur, "sensor") + 1
     typ = input("Typ:\t>> ")
     device = input("Device:\t>> ")
     unit = input("Unit:\t>> ")
-    statement = "Insert into sensor values ('%s','%s','%s')"
+    statement = "Insert into sensor values ('%s','%s','%s','%s')" % (
+        next_id, typ, device, unit)
+    cur.execute(statement)
+    select = "Select * from sensor where sensor.id = '%s'" % next_id
+    for e in cur.execute(select):
+        print(e[0])
 
 
 def new_room(cur):
-    app = create_app()
     name = input("Name:\t>> ")
-    with app.app_context():
-        r = Room(name=name)
-        db.session.add(r)
-        db.session.commit()
-        print(r)
+    statement = "Insert into room values ('%s')" % name
+    cur.execute(statement)
+    select = "Select * from room where room.name = '%s'" % name
+    for e in cur.execute(select):
+        print(e[0])
 
 
-def new_Measure(con, sensor, value):
-    app = create_app()
-    with app.app_context():
-        date = str(datetime.now())
-        m = Measure(sensor=sensor, date=date, value=value)
-        db.session.add(m)
-        db.session.commit()
-        print(m)
+def new_Measure(cur, sensor, value):
+    next_id = getIDMax(cur, "measure") + 1
+    date = str(datetime.now())
+    statement = "Insert into measure values ('%s','%s','%s','%s','%s')" % (
+        next_id, sensor, date, value
+    )
+    cur.execute(statement)
+    select = "Select * form measure where measure.id = '%s'" % next_id
+    for e in cur.execute(select):
+        print(e[0])
+
 
 def options():
     print("statement\t -> execute SQL Statement")
     print("easyAdd\t -> easy table adding")
     print("quit or q or ^C -> back to mainloop")
-
 
 
 def databaseConfigLoop():
@@ -116,6 +153,8 @@ def databaseConfigLoop():
                 addStatement()
             elif opt == "easyAdd":
                 dbEasyAdd()
+            elif opt == "help" or opt == "h":
+                options()
             elif opt == "quit" or opt == "q":
                 print("Quit Database Configuration")
                 return
