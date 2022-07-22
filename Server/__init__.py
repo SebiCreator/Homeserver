@@ -1,28 +1,17 @@
 
 
 
-INCLUDE_PATH = "/Users/sebastiankaeser/Desktop/Coding/Python/Homeserver/Server"
 
 
 
 import sys
-# Proper Imports
-sys.path.insert(0, INCLUDE_PATH)
-
 import os
-from UDPServer import UDPServer
-from CamHandler import CamHandler
-from privates import *
+from .UDPServer import UDPServer
+from .CamHandler import CamHandler
+from .privates import *
 from WebInterface.utils import *
-from Server.dbmanagement import *
-import json
-import time
-from threading import *
+from .dbmanagement import *
 from socket import *
-
-
-
-
 
 
 def createServer():

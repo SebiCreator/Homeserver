@@ -1,6 +1,6 @@
 import cv2 as cv
 import json
-from privates import *
+from .privates import *
 import requests
 from io import BytesIO
 import numpy as np

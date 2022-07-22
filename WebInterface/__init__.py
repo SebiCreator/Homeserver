@@ -7,19 +7,21 @@ from sqlalchemy import true
 db = SQLAlchemy()
 DB_NAME = "database.db"
 
+
 def create_app():
     app = Flask(__name__)
     app.config['SECRET_KEY'] = "dsakdfjalskfjlaskdjflaksjfalksfjds"
     app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite:///%s" % DB_NAME
+    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
     db.init_app(app)
 
     from .views import views
     from .auth import auth
 
-    app.register_blueprint(views,url_prefix="/")
-    app.register_blueprint(auth,url_prefix="/")
+    app.register_blueprint(views, url_prefix="/")
+    app.register_blueprint(auth, url_prefix="/")
 
-    from .DBModels import User 
+    from .DBModels import User
 
     create_database(app)
 
@@ -27,18 +29,14 @@ def create_app():
     login_manager.login_view = 'auth.login'
     login_manager.init_app(app)
 
-
     @login_manager.user_loader
     def load_user(u):
         return User.query.get(int(u))
 
     return app
-    
 
 
 def create_database(app):
     if not path.exists('WebInterface/' + DB_NAME):
         db.create_all(app=app)
         print("Database created")
-
-

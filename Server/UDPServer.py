@@ -3,19 +3,16 @@ import os
 import sys
 import time
 from Server.utils import printError, printSucess
-from utils import *
+from .utils import *
 
 
 from socket import *
-from privates import *
+from .privates import *
 BUFFERSIZE = 1024
 TIMEOUT = 10
 
 
 class UDPServer:
-
-    def config(self):
-        pass
 
     def loadSensors(self):
         with open(DICT_PATH + "sensors.json") as file:
