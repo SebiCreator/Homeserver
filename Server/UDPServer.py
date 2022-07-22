@@ -8,7 +8,6 @@ from utils import *
 
 from socket import *
 from privates import *
-
 BUFFERSIZE = 1024
 TIMEOUT = 10
 
