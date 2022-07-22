@@ -39,10 +39,13 @@ class Room(db.Model):
 class Device(db.Model):
     name = db.Column(db.String(50), primary_key=True)
     room = db.Column(db.String(50), db.ForeignKey("room.name"))
+    ip = db.Column(db.String(20))
+    port = db.Column(db.String(10))
 
     def __repr__(self):
         return ("[DEVICE]\t" +
-                str({"name": self.name, "room": self.room}))
+                str({"name": self.name, "room": self.room,
+                     "ip": self.ip, "port": self.port}))
 
 
 class Unit(db.Model):

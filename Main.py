@@ -16,6 +16,7 @@ from CamHandler import CamHandler
 from privates import *
 from WebInterface import create_app
 from WebInterface.utils import *
+from WebInterface.dbmanagement import *
 import json
 import time
 from threading import *
@@ -42,14 +43,13 @@ def mainloop():
                 camHanlder.chooseCam()
             elif op == "listen":
                 udpServer.handleData()
-            elif op == "add-room":
-                new_room()
-            elif op == "add-unit":
-                new_unit()
-            elif op == "add-device":
-                new_device()
-            elif op == "add-sensor":
-                new_sensor()
+            elif op == 'database-config':
+               databaseConfigLoop()
+            elif op == 'reload':
+                camHandler = CamHandler()
+                udpServer = UDPServer()
+            elif op == "quit" or op == "q":
+                exit(0)
             else:
                 print("Keine option mit der Bezeichung %s" % op)
         except EOFError:

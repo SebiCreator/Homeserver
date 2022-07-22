@@ -12,9 +12,9 @@
       <nav>
         {% block heading %}{% endblock %}
         <ul class='nav-ul'>
-            <li><a href="">Project</a></li>
-            <li><a href="">Menu</a></li>
-            <li><a href="">Settings</a></li>
+            <li><a href="{{ url_for('views.project') }}">Project</a></li>
+            <li><a href="{{ url_for('views.menu') }}">Menu</a></li>
+            <li><a href="{{ url_for('views.settings') }}">Settings</a></li>
             <form class="searchform" action={{ url_for('views.search') }} method='POST' >
                 <input name="searchinput" id="searchinput",class="searchinput"></input>
                 <button type="submit" class="search-btn">Search</input>
