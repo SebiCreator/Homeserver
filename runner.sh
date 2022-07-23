@@ -1,5 +1,9 @@
 #! /bin/bash
 
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+NC='\033[0m'
+
 
 ROOTPATH="/Users/sebastiankaeser/Desktop/Coding/Python/Homeserver"
 WEBSITE="http://127.0.0.1:5000"
@@ -8,17 +12,17 @@ SERVER_CMD=".${SERVERPATH}"
 
 ui_alive () {
     if test -f ".ui_pid"; then
-        echo "++ UI is alive ++\n"
+        echo "${GREEN}++ UI is alive ++${NC}\n"
     else 
-        echo "-- UI is not alive --\n"
+        echo "${RED}-- UI is not alive --${NC}\n"
     fi
 }
 
 se_alive () {
     if test -f ".se_pid"; then
-        echo "++ Server is alive ++\n"
+        echo "${GREEN}++ Server is alive ++${NC}\n"
     else 
-        echo "-- Server is not alive --\n"
+        echo "${RED}-- Server is not alive --${NC}\n"
     fi
 }
 
@@ -30,6 +34,7 @@ ui_start() {
         ./UI.py& >/dev/null
         echo $! > .ui_pid 
         printf "UI started..\n"
+        open "$WEBSITE"
     fi
 }
 
@@ -68,14 +73,22 @@ se_kill() {
 
 
 if [[ $1 == "help" ]]; then
-    printf "Help"
+    echo "run-server -> runs server"
+    echo "run-ui -> runs ui"
+    echo "listen -> watching packets"
+    echo "open -> opens ui (if running)"
+    echo "kill-ui -> deactivates ui"
+    echo "kill-server -> deactivates server"
+    echo "proc -> shows what runs"
+    echo "run-all -> runs server and ui"
+    echo "kill-all -> kills server and ui"
+
 
 elif [[ $1 == "run-server" ]]; then
     se_start
 
 elif [[ $1 == "run-ui" ]]; then
     ui_start
-    open "$WEBSITE"
 
 elif [[ $1 == "listen" ]]; then
     cd "$ROOTPATH"; ./Server.py listen

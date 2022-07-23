@@ -40,10 +40,17 @@ class Server:
     def handleCam(self):
         self.camHandler.chooseCam()
 
+    def options():
+        print("q or quit -> quit programm")
+        print("p or passiv -> run in passiv mode")
+        print("c or cam -> choose cam")
+        print("l or listen -> listen to packets")
+        print("r or reload -> reload ALL connections")
+
     def mainloop(self):
         while 1:
             try :
-                op = finput("Was möchtest du tun?")
+                op = finput("\nWas möchtest du tun?")
                 if op == "q" or op == "quit" :
                     exit(0)
                 if op == "passiv" or op == "p":
@@ -56,6 +63,8 @@ class Server:
                     self.listen_to()
                 if op == "database" or op == "d":
                     self.database_config()
+                elif op == "h" or op == "help":
+                    Server.options()
             except KeyboardInterrupt:
                 print("\nAbbruch!")
                 exit(1)

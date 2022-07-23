@@ -1,5 +1,4 @@
 from sqlalchemy import ForeignKey
-from zmq import device
 from . import db
 from flask_login import UserMixin
 
