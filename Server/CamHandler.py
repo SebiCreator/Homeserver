@@ -1,19 +1,23 @@
 import cv2 as cv
 import json
-from .privates import *
 import requests
 from io import BytesIO
 import numpy as np
+
+from Server.utils import append_parent_dir
+
+append_parent_dir()
+from privates import *
 
 
 class CamHandler:
 
     def saveCamDict(self):
-        with open(DICT_PATH + "camDict.json", "w") as outfile:
+        with open(CAM_DICT_PATH) as outfile:
             json.dump(self.camDict, outfile)
 
     def loadCamDict(self):
-        with open(DICT_PATH + "camDict.json") as file:
+        with open(CAM_DICT_PATH) as file:
             self.camDict = json.load(file)
 
     def __init__(self):

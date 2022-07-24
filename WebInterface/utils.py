@@ -1,7 +1,7 @@
 import json
-from . import create_app, db
-from .DBModels import *
+import os
 from datetime import datetime
+import sys
 
 
 
@@ -28,6 +28,10 @@ def splitSensorData(d):
 
 
 
+def append_parent_dir():
+    current = os.path.dirname(os.path.realpath(__file__))
+    parent = os.path.dirname(current)
+    sys.path.append(parent)
 
 
 

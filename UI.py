@@ -1,7 +1,5 @@
 #! /opt/homebrew/bin/python3
 
-
-
 from WebInterface import create_app
 
 app = create_app()

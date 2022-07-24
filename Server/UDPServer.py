@@ -4,10 +4,13 @@ import sys
 import time
 from Server.utils import printError, printSucess
 from .utils import *
-
-
 from socket import *
-from .privates import *
+
+append_parent_dir()
+
+from privates import *
+
+
 BUFFERSIZE = 1024
 TIMEOUT = 10
 
@@ -15,19 +18,19 @@ TIMEOUT = 10
 class UDPServer:
 
     def loadSensors(self):
-        with open(DICT_PATH + "sensors.json") as file:
+        with open(SENSOR_DICT_PATH) as file:
             self.sensors = json.load(file)
 
     def loadcurrentValues(self):
-        with open(DICT_PATH + "currentDict.json") as file:
+        with open(CURRENT_DICT_PATH) as file:
             self.current = json.load(file)
 
     def saveSensors(self):
-        with open(DICT_PATH + "sensors.json", "w") as outfile:
+        with open(SENSOR_DICT_PATH, "w") as outfile:
             json.dump(self.sensors, outfile)
 
     def savecurrentValues(self):
-        with open(DICT_PATH + "currentDict.json", "w") as outfile:
+        with open(CURRENT_DICT_PATH, "w") as outfile:
             json.dump(self.current, outfile)
 
     def __init__(self):

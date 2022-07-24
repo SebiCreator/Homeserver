@@ -8,9 +8,9 @@ NC='\033[0m'
 ROOTPATH="/Users/sebastiankaeser/Desktop/Coding/Python/Homeserver"
 WEBSITE="http://127.0.0.1:5000"
 
-SERVER_CMD=".${SERVERPATH}"
 
 ui_alive () {
+    cd "$ROOTPATH"
     if test -f ".ui_pid"; then
         echo "${GREEN}++ UI is alive ++${NC}\n"
     else 
@@ -19,6 +19,7 @@ ui_alive () {
 }
 
 se_alive () {
+    cd "$ROOTPATH"
     if test -f ".se_pid"; then
         echo "${GREEN}++ Server is alive ++${NC}\n"
     else 

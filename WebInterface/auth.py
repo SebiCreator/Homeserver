@@ -1,7 +1,7 @@
-from flask import Blueprint, render_template, request, flash, redirect, url_for
+from flask import Blueprint, render_template, request, flash, redirect, url_for, session
 from .DBModels import User
 from werkzeug.security import generate_password_hash, check_password_hash
-from . import db
+from .DBModels import db
 from flask_login import login_user, login_required, logout_user, current_user
 
 
@@ -10,8 +10,8 @@ auth = Blueprint('auth', __name__)
 
 @auth.route("/login", methods=["POST", "GET"])
 def login():
-    print(request.method)
     if request.method == "POST":
+        session.permanent = True
         email = request.form.get('email')
         pwd = request.form.get('password')
 
@@ -21,6 +21,7 @@ def login():
             if check_password_hash(user.password, pwd):
                 flash('Logged in successfully', category='sucess')
                 login_user(user, remember=True)
+                session["user"] = user.email
                 return redirect(url_for('views.dashboard'))
             else:
                 flash('Incorrect Password, please try again', category='error')
@@ -34,6 +35,7 @@ def login():
 @login_required
 def logout():
     logout_user()
+    session.pop("user", None)
     return redirect(url_for('auth.login'))
 
 

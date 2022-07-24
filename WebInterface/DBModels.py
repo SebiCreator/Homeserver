@@ -1,6 +1,6 @@
 from sqlalchemy import ForeignKey
-from . import db
 from flask_login import UserMixin
+from . import db
 
 
 class Id_Generator():

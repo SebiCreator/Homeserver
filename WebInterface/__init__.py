@@ -3,6 +3,14 @@ from flask_sqlalchemy import SQLAlchemy
 from os import path
 from flask_login import LoginManager
 from sqlalchemy import true
+from Server.utils import append_parent_dir
+from datetime import timedelta
+
+append_parent_dir()
+
+from privates import *
+
+
 
 db = SQLAlchemy()
 DB_NAME = "database.db"
@@ -10,9 +18,11 @@ DB_NAME = "database.db"
 
 def create_app():
     app = Flask(__name__)
-    app.config['SECRET_KEY'] = "dsakdfjalskfjlaskdjflaksjfalksfjds"
+    app.config['SECRET_KEY'] = APP_SECRET_KEY
     app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite:///%s" % DB_NAME
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
+
+    app.permanent_session_lifetime = timedelta(minutes=5)
     db.init_app(app)
 
     from .views import views

@@ -2,8 +2,10 @@ from datetime import datetime
 from re import I
 import sqlite3
 
+from Server.utils import append_parent_dir
 
-DATABASE_PATH = "/Users/sebastiankaeser/Desktop/Coding/Python/Homeserver/WebInterface/database.db"
+append_parent_dir()
+
 
 
 def finput(msg):

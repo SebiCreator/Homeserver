@@ -1,15 +1,6 @@
-
-
-
-
-
-
-import sys
-import os
 from .UDPServer import UDPServer
 from .CamHandler import CamHandler
-from .privates import *
-from WebInterface.utils import *
+from WebInterface.utils import append_parent_dir
 from .dbmanagement import *
 from socket import *
 
@@ -53,15 +44,15 @@ class Server:
                 op = finput("\nWas möchtest du tun?")
                 if op == "q" or op == "quit" :
                     exit(0)
-                if op == "passiv" or op == "p":
+                elif op == "passiv" or op == "p":
                     self.run_passiv()
-                if op == "cam" or op == "c":
+                elif op == "cam" or op == "c":
                    self.handleCam()
-                if op == "reload" or op == "r":
+                elif op == "reload" or op == "r":
                     self.reload()
-                if op == "listen" or op == "l":
+                elif op == "listen" or op == "l":
                     self.listen_to()
-                if op == "database" or op == "d":
+                elif op == "database" or op == "d":
                     self.database_config()
                 elif op == "h" or op == "help":
                     Server.options()

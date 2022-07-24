@@ -2,6 +2,7 @@ from flask import Blueprint, redirect, render_template, request, flash, jsonify,
 from flask_login import login_required, current_user
 # from .models import SensorData
 from . import db
+from .DBModels import db
 import json
 import os
 from .utils import *
