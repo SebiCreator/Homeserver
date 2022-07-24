@@ -17,25 +17,9 @@ TIMEOUT = 10
 
 class UDPServer:
 
-    def loadSensors(self):
-        with open(SENSOR_DICT_PATH) as file:
-            self.sensors = json.load(file)
-
-    def loadcurrentValues(self):
-        with open(CURRENT_DICT_PATH) as file:
-            self.current = json.load(file)
-
-    def saveSensors(self):
-        with open(SENSOR_DICT_PATH, "w") as outfile:
-            json.dump(self.sensors, outfile)
-
-    def savecurrentValues(self):
-        with open(CURRENT_DICT_PATH, "w") as outfile:
-            json.dump(self.current, outfile)
-
     def __init__(self):
-        self.loadSensors()
-        self.loadcurrentValues()
+        self.sensors = loadJson(SENSOR_DICT_PATH)
+        self.current = loadJson(CURRENT_DICT_PATH)
         self.socket = socket(AF_INET, SOCK_DGRAM)
         try:
             self.socket.bind((IP, PORT))
@@ -73,7 +57,7 @@ class UDPServer:
             num = float(e[1])
             self.current[f"{translation}:{name}"] = num
             out[f"{translation}:{name}"] = num
-            self.savecurrentValues()
+            saveJson(CURRENT_DICT_PATH,self.current)
 
         return out
 
@@ -127,7 +111,7 @@ class UDPServer:
             ip = addr[0]
             port = int(addr[1])
             self.sensors[ip] = (port, name)
-            self.saveSensors()
+            saveJson(SENSOR_DICT_PATH,self.sensors)
         except KeyboardInterrupt:
             return
 

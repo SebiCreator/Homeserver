@@ -1,6 +1,6 @@
 import sys
 import os
-
+import json
 
 class bcolors:
     HEADER = '\033[95m'
@@ -29,7 +29,13 @@ def printSucess(category: str, msg: str):
     print(bcolors.OKGREEN+ "[%s]\t" %
           category + bcolors.G_TEXT + msg + bcolors.ENDC)
 
+def loadJson(PATH):
+    with open(PATH) as file:
+        return json.load(file)
 
+def saveJson(PATH,data):
+    with open(PATH,"w") as outfile:
+        json.dump(data,outfile)
 
 def disablePrint():
     sys.stdout = open(os.devnull, 'w')

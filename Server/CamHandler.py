@@ -4,7 +4,7 @@ import requests
 from io import BytesIO
 import numpy as np
 
-from Server.utils import append_parent_dir
+from Server.utils import append_parent_dir, loadJson, saveJson
 
 append_parent_dir()
 from privates import *
@@ -12,19 +12,11 @@ from privates import *
 
 class CamHandler:
 
-    def saveCamDict(self):
-        with open(CAM_DICT_PATH) as outfile:
-            json.dump(self.camDict, outfile)
-
-    def loadCamDict(self):
-        with open(CAM_DICT_PATH) as file:
-            self.camDict = json.load(file)
-
     def __init__(self):
-        self.loadCamDict()
+        self.camDict = loadJson(CAM_DICT_PATH)
 
     def close(self):
-        self.saveCamDict()
+        saveJson(self.camDict)
 
     def possibleCams(self):
         for name in self.camDict.keys():
@@ -35,7 +27,7 @@ class CamHandler:
         text = input("name of new cam\n>> ")
         url = input("url of new cam\n>> ")
         self.camDict[text] = url
-        self.saveCamDict()
+        saveJson(CAM_DICT_PATH,self.camDict)
         print("Sucessfully saved cam %s\n" % text)
 
     def chooseCam(self):
